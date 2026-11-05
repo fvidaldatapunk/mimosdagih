@@ -19,6 +19,8 @@ st.set_page_config(layout='wide')
 
 
 st.markdown("""<style>
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
                 .stApp{
                     background-color: #F4F4F4;
                     font-family: font-family: Open Sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
