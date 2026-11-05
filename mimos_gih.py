@@ -21,7 +21,7 @@ st.set_page_config(layout='wide')
 st.markdown("""<style>
                 .stApp{
                     background-color: #F4F4F4;
-                    font-family: Aptos, -apple-system;
+                    font-family: font-family: Open Sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 }
                 .stMultiSelect > div > div {
                     background-color: #E8E8E8;
@@ -73,7 +73,7 @@ with col_logo:
     logo = Image.open('cv_vidal.jpg')
     st.image(logo, width=200)
 with col_titulo:
-    st.markdown('<h1 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Financeiro - Mimos da Gih</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Financeiro - Mimos da Gih</h1>', unsafe_allow_html=True)
 
 #FILTROS
 #fil1, fil2 = st.columns([2,2])
@@ -157,7 +157,7 @@ col2.metric('Qtd dias',qtd_dias)
 col3.metric('Valor despesas',valor_desp_total)
 col4.metric('Despesa dias',qtd_desp_dias)
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Recebíveis</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Recebíveis</h2>', unsafe_allow_html=True)
 col5, col6 = st.columns([2,2])
 
 with col5:
@@ -166,12 +166,12 @@ with col5:
 with col6:
     st.plotly_chart(graf_mensal)
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Produtos</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Produtos</h2>', unsafe_allow_html=True)
 st.dataframe(df_recebiveis_desc)
 
 #DESPESAS
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Despesas</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Despesas</h2>', unsafe_allow_html=True)
 col7, col8 = st.columns([2,2])
 
 with col7:
@@ -181,12 +181,12 @@ with col8:
     st.plotly_chart(graf_desp_mensal,key='graf_desp_mensal')
 
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Descrição despesas</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Descrição despesas</h2>', unsafe_allow_html=True)
 st.dataframe(df_despesas_desc)
 
 #COMPARATIVO
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Comparativo</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Open Sans, -apple-system; margin-top: 40px; ">Comparativo</h2>', unsafe_allow_html=True)
 
 df_recebiveis_anual = df_recebiveis_anual.rename(columns={'valor': 'valor_total'})
 df_despesas_anual = df_despesas_anual.rename(columns={'valor': 'valor_desp_total'})
@@ -217,5 +217,3 @@ with col11:
 
 with col12:
     st.plotly_chart(graf_comp_perc)
-
-print(df_comp)
