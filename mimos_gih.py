@@ -21,6 +21,7 @@ st.set_page_config(layout='wide')
 st.markdown("""<style>
                 .stApp{
                     background-color: #F4F4F4;
+                    font-family: Aptos, -apple-system;
                 }
                 .stMultiSelect > div > div {
                     background-color: #E8E8E8;
@@ -72,17 +73,17 @@ with col_logo:
     logo = Image.open('cv_vidal.jpg')
     st.image(logo, width=200)
 with col_titulo:
-    st.markdown('<h1 style="color: #5C6354; font-family: Aptos; margin-top: 40px; ">Financeiro - Mimos da Gih</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Financeiro - Mimos da Gih</h1>', unsafe_allow_html=True)
 
 #FILTROS
-fil1, fil2 = st.columns([2,2])
+#fil1, fil2 = st.columns([2,2])
 
-with fil1:
+with st.sidebar:
     fil_ano = st.multiselect('',sorted(df_recebiveis['ano'].unique()),
                             default=sorted(df_recebiveis['ano'].unique()))
-with fil2:
     fil_mes = st.multiselect('', sorted(df_recebiveis['mes'].unique()),
                              default=sorted(df_recebiveis['mes'].unique()))   
+
 
 
 df_filtro_recebiveis = df_recebiveis[(df_recebiveis['ano'].isin(fil_ano))&
@@ -93,13 +94,14 @@ df_filtro_despesas = df_despesas[(df_despesas['ano'].isin(fil_ano))&
                                     
 
 #DATA FRAME
-valor_total = df_filtro_recebiveis['valor'].sum()
+valor_total = round(df_filtro_recebiveis['valor'].sum(),2)
 qtd_dias = df_filtro_recebiveis['data'].count()
 
 
 df_recebiveis_anual = df_filtro_recebiveis.groupby('ano')['valor'].sum().reset_index()
-graf_anual = px.bar(df_recebiveis_anual, x='ano',y='valor',text='valor')
+graf_anual = px.bar(df_recebiveis_anual, x='ano',y='valor',text='valor', title='Recebíveis')
 graf_anual.update_traces(textposition='outside')
+graf_anual.update_layout(title_font=dict(color='#5C6354'))
 
 
 df_recebiveis_mensal = df_filtro_recebiveis.groupby(['ano','mes'])['valor'].sum().reset_index()
@@ -124,8 +126,9 @@ valor_desp_total = df_filtro_despesas['valor'].sum()
 qtd_desp_dias = df_filtro_despesas['data'].count()
 
 df_despesas_anual= df_filtro_despesas.groupby('ano')['valor'].sum().reset_index()
-graf_desp_anual = px.bar(df_despesas_anual, x='ano',y='valor', text='valor')
+graf_desp_anual = px.bar(df_despesas_anual, x='ano',y='valor', text='valor', title='Despesas')
 graf_desp_anual.update_traces(textposition='outside')
+graf_desp_anual.update_layout(title_font=dict(color='#5C6354'))
 
 df_despesas_mensal = df_filtro_despesas.groupby(['ano','mes'])['valor'].sum().reset_index()
 df_despesas_mensal['mes']=pd.Categorical(df_despesas_mensal['mes'],categories=ordem_mes,ordered=True)
@@ -138,10 +141,11 @@ graf_desp_mensal.update_layout(xaxis_title='Ano', yaxis_title='Valor', paper_bgc
     title_font=dict(color='#5C6354'),
     margin=dict(l=60, r=60))
 
-df_despesas_desc= (df_filtro_despesas.groupby('descricao_pgt').agg(
+df_despesas_desc= (df_filtro_despesas.groupby('categorias').agg(
     quantidade= ('quantidade','sum'),
     valor= ('valor','sum')   
 )).reset_index()
+
 
 
 
@@ -153,6 +157,7 @@ col2.metric('Qtd dias',qtd_dias)
 col3.metric('Valor despesas',valor_desp_total)
 col4.metric('Despesa dias',qtd_desp_dias)
 
+st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Recebíveis</h2>', unsafe_allow_html=True)
 col5, col6 = st.columns([2,2])
 
 with col5:
@@ -161,9 +166,12 @@ with col5:
 with col6:
     st.plotly_chart(graf_mensal)
 
+st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Produtos</h2>', unsafe_allow_html=True)
+st.dataframe(df_recebiveis_desc)
 
 #DESPESAS
 
+st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Despesas</h2>', unsafe_allow_html=True)
 col7, col8 = st.columns([2,2])
 
 with col7:
@@ -172,9 +180,42 @@ with col7:
 with col8:
     st.plotly_chart(graf_desp_mensal,key='graf_desp_mensal')
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos; margin-top: 40px; ">Produtos</h2>', unsafe_allow_html=True)
-st.dataframe(df_recebiveis_desc)
 
-st.markdown('<h2 style="color: #5C6354; font-family: Aptos; margin-top: 40px; ">Descrição despesas</h2>', unsafe_allow_html=True)
+st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Descrição despesas</h2>', unsafe_allow_html=True)
 st.dataframe(df_despesas_desc)
 
+#COMPARATIVO
+
+st.markdown('<h2 style="color: #5C6354; font-family: Aptos, -apple-system; margin-top: 40px; ">Comparativo</h2>', unsafe_allow_html=True)
+
+df_recebiveis_anual = df_recebiveis_anual.rename(columns={'valor': 'valor_total'})
+df_despesas_anual = df_despesas_anual.rename(columns={'valor': 'valor_desp_total'})
+
+
+
+df_comp = df_recebiveis_anual.merge(df_despesas_anual, on='ano', how='outer').fillna(0)
+total_comp = round(valor_total-valor_desp_total,2)
+perc_desp = round(valor_desp_total/valor_total,2)*100
+df_comp['total_comp'] = round(df_comp['valor_total'] - df_comp['valor_desp_total'],2)
+df_comp['perc_comp'] = round(df_comp['valor_desp_total']/df_comp['valor_total']*100,2)
+
+graf_comp = px.bar(df_comp,x='ano',y='total_comp', text='total_comp')
+graf_comp.update_traces(textposition = 'outside')
+
+graf_comp_perc = px.bar(df_comp,x='ano',y='perc_comp', text='perc_comp')
+graf_comp_perc.update_traces(textposition = 'outside')
+
+col9,col10 = st.columns([2,2])
+
+col9.metric('Total Comparativo', total_comp)
+col10.metric('Percentual de despesas', f'{perc_desp:.2f}%')
+
+col11,col12 = st.columns([2,2])
+
+with col11:
+    st.plotly_chart(graf_comp)
+
+with col12:
+    st.plotly_chart(graf_comp_perc)
+
+print(df_comp)
