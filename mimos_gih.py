@@ -152,6 +152,9 @@ df_despesas_desc= (df_filtro_despesas.groupby('categorias').agg(
 
 
 #RECEBIVEIS
+
+
+
 col1, col2, col3, col4 = st.columns([3,2,3,2])
 
 col1.metric('Valor Total',valor_total)
@@ -219,3 +222,55 @@ with col11:
 
 with col12:
     st.plotly_chart(graf_comp_perc)
+
+
+st.markdown("""
+## Valor de dois anos
+
+**Faturamento:** R$ 7276,88
+
+**Despesas:** 5933,43
+
+As despesas são **81,5% do faturamento**.
+
+No ano de 2025, despesas atingiram **84,5% do faturamento**.
+
+---
+
+## Análise do preço dos produtos
+
+Visto isso, como está o cálculo do preço dos produtos?
+
+O markup está considerando os todos os gastos fixos e variáveis?
+
+Como faz para chegar ao valor final do produto?
+
+---
+
+## Valor das despesas no ano de 2025
+
+- Passagens representam **39,60%**
+- DARF MEI representa **41,60%**
+
+## Sobre o faturamento
+
+- Passagens: **33,50%**
+- DARF MEI: **35%**
+
+---
+
+## Formação do preço de venda
+
+**Preço de venda:** custo Mercadoria X markup
+
+**Markup = 1 / (1 – CV + DF + Invest + Margem Lucro)**
+
+- **DF =** Luz, internet, salário
+- **CV =** passagem, alimentação, insumo
+- **Invest =** 5%
+- **Margem lucro =** 20%
+
+A média de markup no mercado é de 15% a 200% a mais.
+
+Hoje, com os gastos que tens, o markup tem 5,95, ou seja, para ter o preço de venda que pode cobrir os gastos deve multiplicar essa taxa pelo preço da mercadoria.
+""")
